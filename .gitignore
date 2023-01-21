@@ -1,2 +1,4 @@
 venv*/
 compressed_files/
+.vscode/
+__pycache__/
