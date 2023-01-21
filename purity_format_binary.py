@@ -8,7 +8,7 @@ def purity_show_binary_data(bytes: bytes):
 
     output: str = ''
     for idx in range(len(line)):
-        if idx % 8 != 7:
+        if idx % 16 != 15:
             output += f'{line[idx]} '
         else:
             output += f'{line[idx]}\n'
