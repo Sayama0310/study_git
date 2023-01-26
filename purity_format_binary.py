@@ -16,8 +16,20 @@ def purity_show_binary_data(bytes: bytes):
     print(output)
 
 
-def binary_to_hex_string(bytes: bytes) -> str:
-    line: List[str] = []
-    for byte in bytes:
-        line.append('{0:02x}'.format(byte))
-    return ''.join(line)
+def binary_to_hex_string(
+    input_bytes: bytes,
+    with_prefix: bool = False,
+) -> str:
+    converted_string = input_bytes.hex()
+    if with_prefix:
+        converted_string = '0x' + converted_string
+    return converted_string
+
+
+def binary_to_decimal_string(input_bytes: bytes) -> str:
+    converted_string = int(input_bytes.hex(), 16)
+    return str(converted_string)
+
+
+def binary_to_decimal_number(input_bytes: bytes) -> int:
+    return int(input_bytes.hex(), 16)
