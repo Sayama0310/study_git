@@ -16,6 +16,17 @@ def purity_show_binary_data(bytes: bytes):
     print(output)
 
 
+# TODO メソッドがうまくいかない
+def bytes_to_binary_string(
+    input_bytes: bytes,
+    trim_high_digit: bool = False,
+    with_prefix: bool = False,
+) -> str:
+    print(int(input_bytes.hex(), base=16))
+    print(bin(int(input_bytes.hex(), base=16)))
+    pass
+
+
 def binary_to_hex_string(
     input_bytes: bytes,
     with_prefix: bool = False,
@@ -33,3 +44,8 @@ def binary_to_decimal_string(input_bytes: bytes) -> str:
 
 def binary_to_decimal_number(input_bytes: bytes) -> int:
     return int(input_bytes.hex(), 16)
+
+
+if __name__ == '__main__':
+    input = b'\x00\x00\x81\xa4'
+    bytes_to_binary_string(input)
