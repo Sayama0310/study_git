@@ -1,13 +1,47 @@
 from datetime import datetime
-from purity_format_binary import binary_to_decimal_number, binary_to_decimal_string, binary_to_hex_string, bytes_to_binary_string, purity_show_binary_data
+from bytes_operation.convert_bytes import bytes_to_binary_string, bytes_to_hex_string, bytes_to_integer
 
 
-def show_unix_time(unix_time_bytes: bytes) -> datetime:
-    dt = datetime.fromtimestamp(binary_to_decimal_number(unix_time_bytes))
+def convert_unix_time(unix_time_bytes: bytes) -> datetime:
+    dt = datetime.fromtimestamp(bytes_to_integer(unix_time_bytes))
     return dt
 
-def perse_mode(mode_bytes: bytes) -> str:
-    bytes_to_binary_string()
+
+def convert_unix_permission(permission_binary: str) -> str:
+    user_permission = str(int(permission_binary[0:3], 2))
+    group_permission = str(int(permission_binary[3:6], 2))
+    other_permission = str(int(permission_binary[6:9], 2))
+    return user_permission + group_permission + other_permission
+
+
+def show_mode(mode_bytes: bytes) -> str:
+    mode_binary = bytes_to_binary_string(mode_bytes, digit=32)
+
+    for i in range(2):
+        start = 16 * i
+        end = 16 * (i + 1)
+        splitted_mode_binary = mode_binary[start:end]
+
+        # 最初の 4 bit は object type を表す
+        object_type = splitted_mode_binary[0:4]
+        if object_type == '1000':
+            print('object type : regular file(1000)')
+        elif object_type == '1010':
+            print('object type : symbolic link(1010)')
+        elif object_type == '1110':
+            print('object type : gitlink(1010)')
+        else:
+            print('Doesn\'t match mode...')
+
+        # 次の 3 bit は使われていない
+        unused = splitted_mode_binary[4:7]
+        print(f'unused : {unused}')
+
+        # 次の 9 bit は unix permission を表す
+        # regular file >> 0755 or 0644
+        # symbolic link, gitlink >> 0
+        unix_permission = splitted_mode_binary[7:16]
+        print(f'unix_permission : {convert_unix_permission(unix_permission)}')
 
 
 def show_header(header: bytes) -> None:
@@ -15,8 +49,8 @@ def show_header(header: bytes) -> None:
     _4_byte_version_number = header[4:8]
     _32_bit_number_of_index_entries = header[8:12]
     print(_4_bytes_signature.decode())
-    print(binary_to_decimal_string(_4_byte_version_number))
-    print(binary_to_decimal_string(_32_bit_number_of_index_entries))
+    print(bytes_to_integer(_4_byte_version_number))
+    print(bytes_to_integer(_32_bit_number_of_index_entries))
 
 
 def show_entries(entries: bytes) -> None:
@@ -24,32 +58,31 @@ def show_entries(entries: bytes) -> None:
     # TODO nanosecond_fractionsの意味を調査
     _32_bit_ctime_nanosecond_fractions = entries[4:8]
     print(
-        f'ctime : {show_unix_time(_32_bit_ctime_seconds)}.{binary_to_decimal_string(_32_bit_ctime_nanosecond_fractions)}'
+        f'ctime : {convert_unix_time(_32_bit_ctime_seconds)}.{bytes_to_integer(_32_bit_ctime_nanosecond_fractions)}'
     )
     _32_bit_mtime_seconds = entries[8:12]
     _32_bit_mtime_nanosecond_fractions = entries[12:16]
     print(
-        f'mtime : {show_unix_time(_32_bit_mtime_seconds)}.{binary_to_decimal_string(_32_bit_mtime_nanosecond_fractions)}'
+        f'mtime : {convert_unix_time(_32_bit_mtime_seconds)}.{bytes_to_integer(_32_bit_mtime_nanosecond_fractions)}'
     )
     # TODO devとは？
     _32_bit_dev = entries[16:20]
     # TODO inoとは？
     _32_bit_ino = entries[20:24]
     _32_bit_mode = entries[24:28]
-    print(_32_bit_mode)
     _32_bit_uid = entries[28:32]
     _32_bit_gid = entries[32:36]
     _32_bit_file_size = entries[36:40]
-    print(f'dev : {binary_to_decimal_string(_32_bit_dev)}')
-    print(f'ino : {binary_to_decimal_string(_32_bit_ino)}')
-    print(f'mode : {binary_to_decimal_string(_32_bit_mode)}')
-    print(f'uid : {binary_to_decimal_string(_32_bit_uid)}')
-    print(f'gid : {binary_to_decimal_string(_32_bit_gid)}')
-    print(f'size : {binary_to_decimal_string(_32_bit_file_size)}')
+    print(f'dev : {bytes_to_integer(_32_bit_dev)}')
+    print(f'ino : {bytes_to_integer(_32_bit_ino)}')
+    show_mode(_32_bit_mode)
+    print(f'uid : {bytes_to_integer(_32_bit_uid)}')
+    print(f'gid : {bytes_to_integer(_32_bit_gid)}')
+    print(f'size : {bytes_to_integer(_32_bit_file_size)}')
     _160_bit_object_hash = entries[40:60]
-    print(f'hash : {binary_to_hex_string(_160_bit_object_hash)}')
+    print(f'hash : {bytes_to_hex_string(_160_bit_object_hash)}')
     _16_bit_flags = entries[60:62]
-    print(f'flag : {binary_to_decimal_string(_16_bit_flags)}')
+    print(f'flag : {bytes_to_integer(_16_bit_flags)}')
 
 
 def divide_content(content: bytes) -> tuple[bytes, bytes]:
