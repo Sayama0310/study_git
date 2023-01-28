@@ -1,17 +1,14 @@
-import zlib
-from purity_format_binary import purity_show_binary_data
-from show_git_object import purity_show_git_object, show_git_object
+if __name__ == '__main__':
+    int_val = 64512
 
-with open(
-        './compressed_files/0c/dbafebf15332c0788686f2457a87d8ea3ddbf5',
-        'rb',
-) as f:
-    content = f.read()
-    decompressed = zlib.decompress(content)
-    purity_show_git_object(decompressed)
-    show_git_object(decompressed)
-    print()
-    print('Compressed Git Object')
-    purity_show_binary_data(content)
-    print('Decompressed Git Object')
-    purity_show_binary_data(decompressed)
+    # 2進数表記
+    print(bin(int_val))  # 0b1111110000000000
+    
+    # 8進数表記
+    print(oct(int_val))  # 0o176000
+
+    # 10進数表記
+    print(str(int_val))  # 64512
+
+    # 16進数表記
+    print(hex(int_val))  # 0xfc00
