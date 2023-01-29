@@ -1,15 +1,22 @@
 from datetime import datetime
 from bytes_operation.convert_bytes import bytes_to_binary_string, bytes_to_hex_string, bytes_to_integer
 
-ENTRY_LEN = 64
-
 
 class IndexEntry:
 
-    def __init__(self, entry_bytes: bytes) -> None:
-        self.entry_bytes = entry_bytes
-        
-    
+    def __init__(self, entry_bytearray: bytearray) -> None:
+        # index version >= 3 は未対応
+        self.entry_bytes = bytes(entry_bytearray)
+        file_name_size = self.get_file_name_size()
+        self.entry_bytes = bytes(entry_bytearray[0:62 + file_name_size])
+        next_entry_bytes_start = self._next_8_multiple(62 + file_name_size)
+        entry_bytearray[:] = entry_bytearray[next_entry_bytes_start:]
+
+    def _next_8_multiple(self, number: int):
+        # number が 8 の倍数だったときは +8 をして返却
+        remain = 8 - (number % 8)
+        return number + remain
+
     def show(self):
         self.show_ctime()
         self.show_mtime()
@@ -21,6 +28,7 @@ class IndexEntry:
         self.show_size()
         self.show_hash()
         self.show_flag()
+        self.show_file_name()
 
     def show_ctime(self):
         _32_bit_ctime_seconds = self.entry_bytes[0:4]
@@ -109,3 +117,18 @@ class IndexEntry:
         print(f'extended flag : {binary_flag[1:2]}')
         print(f'stage : {binary_flag[2:4]}')
         print(f'name length : {int(binary_flag[4:16], 2)}')
+
+    def show_file_name(self):
+        file_name_size = self.get_file_name_size()
+        _file_name_bytes = self.entry_bytes[62:62 + file_name_size]
+        file_name = ''
+        try:
+            file_name = _file_name_bytes.decode()
+        except Exception as e:
+            file_name = 'Error!!'
+        print(f'file name : {file_name}')
+
+    def get_file_name_size(self):
+        _16_bit_flags = self.entry_bytes[60:62]
+        binary_flag = bytes_to_binary_string(_16_bit_flags, digit=16)
+        return int(binary_flag[4:16], 2)

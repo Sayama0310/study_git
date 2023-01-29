@@ -1,7 +1,7 @@
 from datetime import datetime
 from icecream import ic
-from bytes_operation.convert_bytes import bytes_to_binary_string, bytes_to_integer
-from git_index.index_entry import ENTRY_LEN, IndexEntry
+from bytes_operation.convert_bytes import bytes_to_integer
+from git_index.index_entry import IndexEntry
 
 
 def show_header(header: bytes) -> None:
@@ -11,15 +11,18 @@ def show_header(header: bytes) -> None:
     print(_4_bytes_signature.decode())
     print(bytes_to_integer(_4_byte_version_number))
     print(bytes_to_integer(_32_bit_number_of_index_entries))
+    print('==================================')
 
 
-def show_entries(entries: bytes) -> None:
-    # for i in range(int(len(entries) / ENTRY_LEN)):
-    for i in range(1):
-        start = ENTRY_LEN * i
-        end = ENTRY_LEN * (i + 1)
-        entry_bytes = entries[start:end]
-        entry = IndexEntry(entry_bytes)
+def get_entry_number(header: bytes) -> int:
+    _32_bit_number_of_index_entries = header[8:12]
+    return bytes_to_integer(_32_bit_number_of_index_entries)
+
+
+def show_entries(entries: bytes, entry_number: int) -> None:
+    entries_bytearraay = bytearray(entries)
+    for _ in range(entry_number):
+        entry = IndexEntry(entries_bytearraay)
         entry.show()
         print('==================================')
 
@@ -40,4 +43,5 @@ if __name__ == '__main__':
     content = read_index(index_path)
     header, entries = divide_content(content)
     show_header(header)
-    show_entries(entries)
+    entry_number = get_entry_number(header)
+    show_entries(entries, entry_number)
