@@ -1,6 +1,6 @@
 import hashlib
 import zlib
-from purity_format_binary import purity_show_binary_data
+from bytes_operation.purity_format_binary import purity_show_binary_data
 
 # blobオブジェクトの中身
 content = """# カレーのレシピ

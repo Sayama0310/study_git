@@ -1,5 +1,5 @@
 from typing import List
-from purity_format_binary import binary_to_hex_string
+from bytes_operation.purity_format_binary import binary_to_hex_string
 
 
 def purity_show_git_object(bytes: bytes):

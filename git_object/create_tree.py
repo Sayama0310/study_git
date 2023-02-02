@@ -1,6 +1,6 @@
 import hashlib
 import zlib
-from purity_format_binary import purity_show_binary_data
+from bytes_operation.purity_format_binary import purity_show_binary_data
 
 # treeオブジェクトの中身
 content = '100644 README.md'.encode()            + b'\0' + bytes.fromhex('944b8ef2e83aea596fd2a662d629042f3e92edc3') \

@@ -1,6 +1,6 @@
 import hashlib
 import zlib
-from purity_format_binary import purity_show_binary_data
+from bytes_operation.purity_format_binary import purity_show_binary_data
 
 # commitオブジェクトの中身
 content = """tree 0cdbafebf15332c0788686f2457a87d8ea3ddbf5
