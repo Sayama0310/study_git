@@ -16,8 +16,8 @@ content_size = len(content)
 header = f'commit {content_size}\0'.encode()
 
 # zlibによる圧縮
-blob = zlib.compress(header + content, level=1)
-purity_show_binary_data(blob)
+commit = zlib.compress(header + content, level=1)
+purity_show_binary_data(commit)
 
 # SHA-1にハッシュ値の計算
 hash = hashlib.sha1(header + content).hexdigest()
