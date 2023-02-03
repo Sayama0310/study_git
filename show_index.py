@@ -22,12 +22,13 @@ def get_entry_number(header: bytes) -> int:
     return bytes_to_integer(_32_bit_number_of_index_entries)
 
 
-def show_entries(entries: bytes, entry_number: int) -> None:
+def show_entries(entries: bytes, entry_number: int) -> bytes:
     entries_bytearraay = bytearray(entries)
     for _ in range(entry_number):
         entry = IndexEntry(entries_bytearraay)
         entry.show()
         print(Fore.GREEN + '==================================')
+    return bytes(entries_bytearraay)
 
 
 def divide_content(content: bytes) -> tuple[bytes, bytes]:
@@ -44,7 +45,8 @@ def read_index(index_path: str) -> bytes:
 if __name__ == '__main__':
     index_path = r'.git/index'
     content = read_index(index_path)
-    header, entries = divide_content(content)
+    header, entries_extension = divide_content(content)
     show_header(header)
     entry_number = get_entry_number(header)
-    show_entries(entries, entry_number)
+    extension = show_entries(entries_extension, entry_number)
+    print(extension)
