@@ -1,4 +1,6 @@
+from typing import List
 from git_index.divide_content import divide_content
+from git_index.header import Header
 from git_index.show_contents import show_header, show_entries, show_extension
 from git_index.entries_operation import get_entry_number
 
@@ -8,10 +10,18 @@ def read_index(index_path: str) -> bytes:
         return f.read()
 
 
+def semantical_read(content: bytes) -> tuple[Header, Entries, Extension]:
+    header = Header(content[0:12])
+    entries = []
+    for _ in range(header.number_of_index_entries):
+        pass
+
+
 if __name__ == '__main__':
     index_path = r'.git/index'
     content = read_index(index_path)
-    header, entries, extension = divide_content(content)
-    show_header(header)
-    show_entries(entries, get_entry_number(header))
-    show_extension(extension)
+    header, entries, extension = semantical_read(content)
+    header.show()
+    for entry in entries:
+        entry.show()
+    extension.show()
