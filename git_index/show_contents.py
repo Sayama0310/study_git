@@ -25,3 +25,7 @@ def show_entries(entries: bytes, entry_number: int) -> bytes:
         entry.show()
         print(Fore.GREEN + '==================================')
     return bytes(entries_bytearraay)
+
+
+def show_extension(extension: bytes) -> None:
+    print(Fore.RED + extension)
