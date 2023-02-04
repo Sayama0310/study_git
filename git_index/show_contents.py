@@ -9,6 +9,7 @@ colorama.init(autoreset=True)
 
 
 def show_header(header: bytes) -> None:
+    print(Fore.GREEN + '============= HEADER =============')
     _4_bytes_signature = header[0:4]
     _4_byte_version_number = header[4:8]
     _32_bit_number_of_index_entries = header[8:12]
@@ -19,13 +20,16 @@ def show_header(header: bytes) -> None:
 
 
 def show_entries(entries: bytes, entry_number: int) -> bytes:
+    print(Fore.BLUE + '============= ENTRIES ============')
     entries_bytearraay = bytearray(entries)
     for _ in range(entry_number):
         entry = IndexEntry(entries_bytearraay)
         entry.show()
-        print(Fore.GREEN + '==================================')
+        print(Fore.BLUE + '==================================')
     return bytes(entries_bytearraay)
 
 
 def show_extension(extension: bytes) -> None:
-    print(Fore.RED + extension)
+    print(Fore.RED + '============ EXTENSION ===========')
+    print(extension)
+    print(Fore.RED + '==================================')
