@@ -8,9 +8,9 @@ colorama.init(autoreset=True)
 class Extension:
 
     def __init__(self, extension_bytes: bytes) -> None:
-        self.__extension = extension_bytes
+        self.__extension_bytes = extension_bytes
 
     def show(self):
         print(Fore.YELLOW + '============ EXTENSION ===========')
-        print(self.__extension)
+        print(self.__extension_bytes)
         print(Fore.YELLOW + '==================================')
