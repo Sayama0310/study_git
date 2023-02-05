@@ -1,10 +1,6 @@
-from typing import List
-from git_index.divide_content import divide_content
 from git_index.entry import Entries
 from git_index.extension import Extension
 from git_index.header import Header
-from git_index.show_contents import show_header, show_entries, show_extension
-from git_index.entries_operation import get_entry_number
 
 
 def read_index(index_path: str) -> bytes:
