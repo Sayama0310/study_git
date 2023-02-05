@@ -1,9 +1,9 @@
 from typing import List
 
 
-def purity_show_binary_data(bytes: bytes):
+def purity_show_binary_data(input_bytes: bytes):
     line: List[str] = []
-    for byte in bytes:
+    for byte in input_bytes:
         line.append('{0:02x}'.format(byte))
 
     output: str = ''
